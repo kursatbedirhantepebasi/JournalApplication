@@ -1,11 +1,14 @@
 package com.example.journalapp;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
@@ -24,24 +27,36 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 public class AddJournal extends Activity implements LocationListener {
 
     private static Button closePopUp;
     private TextView dateView, locationView;
-    private ImageView calendarIcon;
+    private ImageView calendarIcon, addPhotoIcon, image1, image2, image3, image4,
+            image5, image6, image7, activeImage;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     protected LocationManager locationManager;
+    ArrayList<Uri> imageUris = new ArrayList<Uri>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +67,9 @@ public class AddJournal extends Activity implements LocationListener {
         setDefaultDate();//bu günün tarihi default olarak setlenir, kullanıcı datepicker dialog ile tarihi değiştirebilir.
         setDefaultLocation();// bulunulan konum default olarak eklenir.
         openDatePickerDialog();
+        addPhoto();
+        clickImage1();
+        //clickImage2();
     }
 
     public void createPopUp() {
@@ -156,6 +174,23 @@ public class AddJournal extends Activity implements LocationListener {
         dialog.show();
     }
 
+    public void addPhoto(){
+        addPhotoIcon = (ImageView) findViewById(R.id.addPhotoIcon);
+        addPhotoIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, getRequestCode());
+
+
+
+            }
+        });
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         locationView = (TextView) findViewById(R.id.locationView);
@@ -187,4 +222,93 @@ public class AddJournal extends Activity implements LocationListener {
     public void onProviderDisabled(String provider) {
         Log.d("Latitude","disable");
     }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public int getRequestCode() {
+        Set<Integer> unique = new HashSet<>();
+
+        while (unique.size() != 10) {
+            int randInt = ThreadLocalRandom.current().nextInt(1, 2000);
+            unique.add(randInt);
+        }
+
+        return unique.hashCode();
+    }
+
+
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+
+        image1 = (ImageView) findViewById(R.id.image1);
+        image2 = (ImageView) findViewById(R.id.image2);
+        image3 = (ImageView) findViewById(R.id.image3);
+        image4 = (ImageView) findViewById(R.id.image4);
+        image5 = (ImageView) findViewById(R.id.image5);
+        image6 = (ImageView) findViewById(R.id.image6);
+        image7 = (ImageView) findViewById(R.id.image7);
+
+        if (resultCode == RESULT_OK) {
+                final Uri imageUri = data.getData();
+                if(image1.getDrawable()==null){
+                    imageUris.add(imageUri);
+                    image1.setImageBitmap(createImage(imageUri));
+                }
+                else if(image2.getDrawable()==null){
+                    imageUris.add(imageUri);
+                    image2.setImageBitmap(createImage(imageUri));
+                }
+                else if(image3.getDrawable()==null){
+                    imageUris.add(imageUri);
+                    image3.setImageBitmap(createImage(imageUri));
+                }
+                else if(image4.getDrawable()==null){
+                    imageUris.add(imageUri);
+                    image4.setImageBitmap(createImage(imageUri));
+                }
+                else if(image5.getDrawable()==null){
+                    imageUris.add(imageUri);
+                    image5.setImageBitmap(createImage(imageUri));
+                }
+                else if(image6.getDrawable()==null){
+                    imageUris.add(imageUri);
+                    image6.setImageBitmap(createImage(imageUri));
+                }
+                else if(image7.getDrawable()==null){
+                    imageUris.add(imageUri);
+                    image7.setImageBitmap(createImage(imageUri));
+                }
+                else {
+                    Log.d("photoPickerIntent","Error");
+                }
+
+        }else {
+            Log.d("photoPickerIntent","Error");
+        }
+    }
+
+    public Bitmap createImage(final Uri imageUri){
+        try {
+            final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            return selectedImage;
+        }
+        catch (FileNotFoundException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void clickImage1(){
+        image1 = (ImageView) findViewById(R.id.image1);
+        activeImage = (ImageView) findViewById(R.id.activeImage);
+        image1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Uri imageUri = imageUris.get(0);
+                activeImage.setImageBitmap(createImage(imageUri));
+            }
+        });
+    }
+
 }
