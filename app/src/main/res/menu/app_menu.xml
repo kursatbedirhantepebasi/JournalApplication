@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/forSearchItem"
+        android:title="Search for subject or category"
+        android:icon="@drawable/ic_search_black_24dp"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        />
+
+    <item
+        android:id="@+id/addJournal"
+        android:title="Add Journal"
+        android:icon="@drawable/ic_add_circle_outline_black_24dp"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menuItem"
+        android:icon="@drawable/ic_menu_black_24dp"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+
+            <item
+                android:id="@+id/statistic"
+                android:title="Statistic"
+                android:icon="@drawable/ic_pie_chart_black_24dp"
+                app:showAsAction="never"/>
+
+            <item
+                android:id="@+id/forAll"
+                android:title="All Journals"
+                android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+                app:showAsAction="never"/>
+
+            <item
+                android:id="@+id/forYear"
+                android:title="List For This Year"
+                android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+                app:showAsAction="never"/>
+
+            <item
+                android:id="@+id/forMonth"
+                android:title="List For This Month"
+                android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+                app:showAsAction="never"/>
+
+            <item
+                android:id="@+id/forDay"
+                android:title="List For This Day"
+                android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+                app:showAsAction="never"/>
+
+        </menu>
+    </item>
+
+</menu>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/journalImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/journal" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="228dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/subTitle"
+        android:layout_width="229dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginLeft="70dp" />
+
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:layout_below="@+id/subTitle"
+        android:layout_marginLeft="65dp"
+        android:clickable="true"
+        android:src="@drawable/ic_date_range_black_24dp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="213dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/subTitle"
+        android:layout_marginLeft="85dp"
+        android:layout_marginTop="-1dp"
+        android:textSize="11dp" />
+
+    <ImageView
+        android:id="@+id/locationIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:layout_below="@+id/date"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/ic_location_on_black_24dp" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="214dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date"
+        android:layout_marginLeft="85dp"
+        android:textSize="10dp" />
+
+    <ImageView
+        android:id="@+id/mainImg"
+        android:layout_width="83dp"
+        android:layout_height="68dp"
+        android:layout_above="@+id/line"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="7dp" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#3F3F3F"
+        android:layout_below="@+id/location"
+        android:layout_marginTop="5dp"/>
+
+
+</RelativeLayout>

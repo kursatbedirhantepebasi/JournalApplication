@@ -26,17 +26,22 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import com.example.journalapp.models.Journal;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,13 +50,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 
 public class AddJournal extends Activity implements LocationListener {
 
-    private static Button closePopUp;
-    private TextView dateView, locationView;
+    private String journalId;
+    private boolean isEdit;
+
+    private static Button closePopUp, deleteButton,sharedButton;
+    private TextView dateView, locationView, modalHeader;
     private ImageView calendarIcon, addPhotoIcon, image1, image2, image3, image4,
             image5, image6, image7, activeImage;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -68,9 +77,133 @@ public class AddJournal extends Activity implements LocationListener {
         setDefaultLocation();// bulunulan konum default olarak eklenir.
         openDatePickerDialog();
         addPhoto();
-        clickImage1();
-        //clickImage2();
+        clickImage();
+        saveJournal();
+        isEditControlAndBuildForm();
     }
+
+    public void isEditControlAndBuildForm(){
+
+        journalId = getIntent().getStringExtra("journalId");
+        if (journalId != null){
+            isEdit = true;
+            buildForm();
+        }
+        else {
+            isEdit=false;
+            deleteButton = findViewById(R.id.deleteButton);
+            deleteButton.setVisibility(View.GONE);
+            sharedButton = findViewById(R.id.sharedButton);
+            sharedButton.setVisibility(View.GONE);
+        }
+
+    }
+
+    public void buildForm(){
+        //başlık setlenmeli
+        modalHeader = (TextView) findViewById(R.id.modalHeader);
+        modalHeader.setText("Edit Journal");
+        //editlenicek Journal formu setlenmeli
+        Journal journal = getJournal();
+
+        EditText title = (EditText) findViewById(R.id.title);
+        title.setText(journal.title);
+
+        EditText subTitle = (EditText) findViewById(R.id.subTitle);
+        subTitle.setText(journal.subTitle);
+
+        dateView = (TextView) findViewById(R.id.date);
+        dateView.setText(journal.date);
+
+        TextView locationView = (TextView) findViewById(R.id.locationView);
+        locationView.setText(journal.location);
+
+        EditText memoryTextArea = (EditText) findViewById(R.id.memoryTextArea);
+        memoryTextArea.setText(journal.memoryText);
+
+        //resimler setlenmeli
+        image1 = (ImageView) findViewById(R.id.image1);
+        image2 = (ImageView) findViewById(R.id.image2);
+        image3 = (ImageView) findViewById(R.id.image3);
+        image4 = (ImageView) findViewById(R.id.image4);
+        image5 = (ImageView) findViewById(R.id.image5);
+        image6 = (ImageView) findViewById(R.id.image6);
+        image7 = (ImageView) findViewById(R.id.image7);
+
+        activeImage = (ImageView) findViewById(R.id.activeImage);
+        Log.i("resimler","journal.images === "+journal.images);
+
+        for (int i=0; i<journal.images.size(); i++){
+            Uri imageUri = Uri.parse(journal.images.get(i));
+            this.imageUris.add(imageUri);
+            if(i==0)
+            {
+                activeImage.setImageBitmap(createImage(imageUri));
+                image1.setImageBitmap(createImage(imageUri));
+            }
+            else if(i==1)
+                image2.setImageBitmap(createImage(imageUri));
+            else if(i==2)
+                image3.setImageBitmap(createImage(imageUri));
+            else if(i==3)
+                image4.setImageBitmap(createImage(imageUri));
+            else if(i==4)
+                image5.setImageBitmap(createImage(imageUri));
+            else if(i==5)
+                image6.setImageBitmap(createImage(imageUri));
+            else if(i==6)
+                image7.setImageBitmap(createImage(imageUri));
+            else
+                Log.d("photoPickerIntent","Error");
+        }
+
+    }
+
+    public Journal getJournal(){
+
+        try {
+            FileInputStream fileInputStream =  openFileInput(journalId+".txt");
+            int read = -1;
+            StringBuffer buffer = new StringBuffer();
+            while((read =fileInputStream.read())!= -1){
+                buffer.append((char)read);
+            }
+
+            String properties[] = buffer.toString().split("#");
+
+            String journalId = properties[0];
+            String title = properties[1];
+            String subTitle = properties[2];
+            String date = properties[3];
+            String location = properties[4];
+            String memoryText = properties[5];
+            ArrayList<String> images =  new ArrayList<String>();
+            if(properties.length > 6){
+                images.add(properties[6]);
+            }if(properties.length > 7){
+                images.add(properties[7]);
+            } if(properties.length > 8){
+                images.add(properties[8]);
+            } if(properties.length > 9){
+                images.add(properties[9]);
+            } if(properties.length > 10){
+                images.add(properties[10]);
+            } if(properties.length > 11){
+                images.add(properties[11]);
+            } if(properties.length > 12){
+                images.add(properties[12]);
+            }
+
+            return new Journal(journalId,title,subTitle, date, location, memoryText, images);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Journal(null,null,null,null,null,null,
+                    null);
+        }
+
+    }
+
 
     public void createPopUp() {
 
@@ -80,7 +213,7 @@ public class AddJournal extends Activity implements LocationListener {
         int width = displayMetric.widthPixels;
         int height = displayMetric.heightPixels;
 
-        getWindow().setLayout((int) (width * .9), (int) (height * .8));
+        getWindow().setLayout((int) (width * .9), (int) (height * .9));
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
@@ -179,14 +312,9 @@ public class AddJournal extends Activity implements LocationListener {
         addPhotoIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, getRequestCode());
-
-
-
+                Intent galleryIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent, getRequestCode());
             }
         });
     }
@@ -299,16 +427,147 @@ public class AddJournal extends Activity implements LocationListener {
         }
     }
 
-    public void clickImage1(){
+    public void clickImage(){
         image1 = (ImageView) findViewById(R.id.image1);
+        image2 = (ImageView) findViewById(R.id.image2);
+        image3 = (ImageView) findViewById(R.id.image3);
+        image4 = (ImageView) findViewById(R.id.image4);
+        image5 = (ImageView) findViewById(R.id.image5);
+        image6 = (ImageView) findViewById(R.id.image6);
+        image7 = (ImageView) findViewById(R.id.image7);
+
         activeImage = (ImageView) findViewById(R.id.activeImage);
         image1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Uri imageUri = imageUris.get(0);
-                activeImage.setImageBitmap(createImage(imageUri));
+                if (imageUris.size()>0) {
+                    final Uri imageUri = imageUris.get(0);
+                    activeImage.setImageBitmap(createImage(imageUri));
+                }
             }
         });
+        image2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUris.size()>1) {
+                    final Uri imageUri = imageUris.get(1);
+                    activeImage.setImageBitmap(createImage(imageUri));
+                }
+            }
+        });
+        image3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUris.size()>2){
+                    final Uri imageUri = imageUris.get(2);
+                    activeImage.setImageBitmap(createImage(imageUri));
+                }
+            }
+        });
+        image4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUris.size()>3){
+                    final Uri imageUri = imageUris.get(3);
+                    activeImage.setImageBitmap(createImage(imageUri));
+                }
+            }
+        });
+        image5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUris.size()>4){
+                    final Uri imageUri = imageUris.get(4);
+                    activeImage.setImageBitmap(createImage(imageUri));
+                }
+            }
+        });
+        image6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUris.size()>5){
+                    final Uri imageUri = imageUris.get(5);
+                    activeImage.setImageBitmap(createImage(imageUri));
+                }
+            }
+        });
+        image7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUris.size()>6){
+                    final Uri imageUri = imageUris.get(6);
+                    activeImage.setImageBitmap(createImage(imageUri));
+                }
+            }
+        });
+    }
+
+    public void saveJournal()  {
+
+        Button saveJournalButton = (Button) findViewById(R.id.saveJournalButton);
+
+        saveJournalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UUID uniqueKey = UUID.randomUUID();
+                try {
+
+                    EditText title = (EditText) findViewById(R.id.title);
+                    EditText subTitle = (EditText) findViewById(R.id.subTitle);
+                    TextView date = (TextView) findViewById(R.id.date);
+                    TextView location = (TextView) findViewById(R.id.locationView);
+                    TextView memoryText = (TextView) findViewById(R.id.memoryTextArea);
+
+                    if(isEdit){
+                        //dosyayı silip yeni dosya yaratma planlanmıştır.
+                        File dir = getFilesDir();
+                        File file = new File(dir, journalId+".txt");
+                        file.delete();
+                    }
+
+                    FileOutputStream fileout=openFileOutput(uniqueKey+".txt", MODE_PRIVATE);
+                    OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+                    outputWriter.write(uniqueKey.toString()+"#");
+                    outputWriter.write(title.getText().toString()+"#");
+                    outputWriter.write(subTitle.getText().toString()+"#");
+                    outputWriter.write(date.getText().toString()+"#");
+                    outputWriter.write(location.getText().toString()+"#");
+                    outputWriter.write(memoryText.getText().toString()+"#");
+
+                    if(imageUris.size()>0)
+                        outputWriter.write(imageUris.get(0).toString()+"#");
+                    if(imageUris.size()>1)
+                        outputWriter.write(imageUris.get(1).toString()+"#");
+                    if(imageUris.size()>2)
+                        outputWriter.write(imageUris.get(2).toString()+"#");
+                    if(imageUris.size()>3)
+                        outputWriter.write(imageUris.get(3).toString()+"#");
+                    if(imageUris.size()>4)
+                        outputWriter.write(imageUris.get(4).toString()+"#");
+                    if(imageUris.size()>5)
+                        outputWriter.write(imageUris.get(5).toString()+"#");
+                    if(imageUris.size()>6)
+                        outputWriter.write(imageUris.get(6).toString()+"#");
+
+                    outputWriter.close();
+
+                    Toast toast =  Toast.makeText(AddJournal.this,"Successfully Saved",
+                            Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.show();
+                    //liste yenilenmesi için main activitiy adımlarındaki kontroller yapılmalı
+                    Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(mainActivity);
+
+                } catch (Exception e) {
+                    Toast.makeText(getBaseContext(), "Error !!!",
+                            Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
     }
 
 }
