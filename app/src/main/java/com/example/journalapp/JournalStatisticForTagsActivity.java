@@ -1,29 +1,26 @@
 package com.example.journalapp;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
-
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class JournalStatisticActivity extends AppCompatActivity {
+public class JournalStatisticForTagsActivity extends AppCompatActivity {
 
     AnyChartView anyChartView;
 
@@ -34,7 +31,7 @@ public class JournalStatisticActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.journal_statistic);
+        setContentView(R.layout.journal_statistic_for_tags);
         anyChartView = findViewById(R.id.chart);
         createChart();
     }
@@ -43,18 +40,25 @@ public class JournalStatisticActivity extends AppCompatActivity {
     public void createChart(){
 
         String[] fileList = this.fileList();
-        ArrayList<String> journals = new ArrayList<String>();
-        ArrayList<String> formattedDates = new ArrayList<String>();
+        ArrayList<String> allTags = new ArrayList<String>();
+        ArrayList<String> formattedTags = new ArrayList<String>();
+        ArrayList<String> formattedTrimTags = new ArrayList<String>();
+
 
         for (String fileName:fileList) {
-            journals.add(getDates(fileName));
+            allTags.add(getTags(fileName));
         }
 
-        Log.i("result","journals = "+journals);
-        formattedDates = formatDate(journals);
+        formattedTags = formatTags(allTags);
+
+        for(int i = 0; i<formattedTags.size();i++){
+           if(!formattedTags.get(i).equals("")){
+               formattedTrimTags .add(formattedTags.get(i));
+           }
+        }
 
         Map<String, Long> result =
-                formattedDates.stream().collect(
+                formattedTrimTags.stream().map(String::trim).collect(
                         Collectors.groupingBy(
                                 Function.identity(), Collectors.counting()
                         )
@@ -68,21 +72,23 @@ public class JournalStatisticActivity extends AppCompatActivity {
         }
 
         setupPieChart();
-
     }
 
-    public ArrayList<String> formatDate ( ArrayList<String> dates){
+    public ArrayList<String> formatTags(ArrayList<String> tages){
 
-        ArrayList<String> formattedDates = new ArrayList<String>();
+        ArrayList<String> formattedTags = new ArrayList<String>();
 
-        for (int i = 0; i<dates.size();i++){
-             String[] tempValues = dates.get(i).split("/");
-            formattedDates.add(tempValues[1]+'/'+tempValues[2]);
+        for (int i = 0; i<tages.size();i++){
+             String[] tempValues = tages.get(i).split("@");
+             for(int j=0; j<tempValues.length; j++){
+                     formattedTags.add(tempValues[j]);
+             }
         }
-        return formattedDates;
+
+        return formattedTags;
     }
 
-    public String getDates(String fileName){
+    public String getTags(String fileName){
 
         try {
             FileInputStream fileInputStream =  openFileInput(fileName);
@@ -93,9 +99,9 @@ public class JournalStatisticActivity extends AppCompatActivity {
             }
 
             String properties[] = buffer.toString().split("#");
-            String date = properties[3];
+            String tag = properties[6];
 
-            return date;
+            return tag;
         } catch (Exception e) {
                 return "";
         }
@@ -128,31 +134,31 @@ public class JournalStatisticActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addJournal:
-                Intent addJournalActivity = new Intent(JournalStatisticActivity.this, AddJournal.class);
+                Intent addJournalActivity = new Intent(JournalStatisticForTagsActivity.this, AddJournal.class);
                 startActivity(addJournalActivity);
                 return true;
             case R.id.statistic:
-                Intent journalStatisticActivity = new Intent(JournalStatisticActivity.this, JournalStatisticActivity.class);
+                Intent journalStatisticActivity = new Intent(JournalStatisticForTagsActivity.this, JournalStatisticActivity.class);
                 startActivity(journalStatisticActivity);
                 return true;
             case R.id.forAll:
-                Intent listJournalActivity = new Intent(JournalStatisticActivity.this, ListJournalActivity.class);
+                Intent listJournalActivity = new Intent(JournalStatisticForTagsActivity.this, ListJournalActivity.class);
                 startActivity(listJournalActivity);
                 return true;
             case R.id.forDay:
-                Intent journalListForDayActivity = new Intent(JournalStatisticActivity.this, JournalListForDayActivity.class);
+                Intent journalListForDayActivity = new Intent(JournalStatisticForTagsActivity.this, JournalListForDayActivity.class);
                 startActivity(journalListForDayActivity);
                 return true;
             case R.id.forMonth:
-                Intent journalListForMonthActivity = new Intent(JournalStatisticActivity.this, JournalListForMonthActivity.class);
+                Intent journalListForMonthActivity = new Intent(JournalStatisticForTagsActivity.this, JournalListForMonthActivity.class);
                 startActivity(journalListForMonthActivity);
                 return true;
             case R.id.forYear:
-                Intent journalListForYearActivity = new Intent(JournalStatisticActivity.this, JournalListForYearActivity.class);
+                Intent journalListForYearActivity = new Intent(JournalStatisticForTagsActivity.this, JournalListForYearActivity.class);
                 startActivity(journalListForYearActivity);
                 return true;
             case R.id.statisticForTags:
-                Intent journalStatisticForTagsActivity = new Intent(JournalStatisticActivity.this, JournalStatisticForTagsActivity.class);
+                Intent journalStatisticForTagsActivity = new Intent(JournalStatisticForTagsActivity.this, JournalStatisticForTagsActivity.class);
                 startActivity(journalStatisticForTagsActivity);
                 return true;
             default:

@@ -122,20 +122,48 @@
             android:layout_marginTop="5dp"/>
 
 
+
+
+
+        <ImageView
+            android:id="@+id/tagIcon"
+            android:layout_width="40dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/line2"
+            android:src="@drawable/ic_label_outline_black_24dp"
+            android:clickable="true"/>
+        <EditText
+            android:id="@+id/tags"
+            android:layout_width="331dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/line2"
+            android:layout_marginLeft="75dp"
+            android:layout_marginTop="2dp"
+            android:gravity="top" />
+
+        <View android:id="@+id/line3"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="#3F3F3F"
+            android:layout_below="@+id/tagIcon"
+            android:layout_marginTop="5dp"/>
+
+
         <ImageView
             android:id="@+id/addMemoryIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_edit_black_24dp"
             android:clickable="true"
-            android:layout_below="@+id/line2"
+            android:layout_below="@+id/line3"
             android:layout_marginTop="5dp"/>
 
         <EditText
             android:id="@+id/memoryTextArea"
             android:layout_width="331dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/line2"
+            android:layout_below="@+id/line3"
             android:layout_marginLeft="75dp"
             android:layout_marginTop="2dp"
             android:gravity="top"

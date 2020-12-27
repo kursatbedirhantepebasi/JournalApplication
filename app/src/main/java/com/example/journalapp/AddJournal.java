@@ -123,6 +123,9 @@ public class AddJournal extends Activity implements LocationListener {
         EditText memoryTextArea = (EditText) findViewById(R.id.memoryTextArea);
         memoryTextArea.setText(journal.memoryText);
 
+        EditText tags = (EditText) findViewById(R.id.tags);
+        tags.setText(journal.tags);
+
         //resimler setlenmeli
         image1 = (ImageView) findViewById(R.id.image1);
         image2 = (ImageView) findViewById(R.id.image2);
@@ -179,12 +182,12 @@ public class AddJournal extends Activity implements LocationListener {
             String date = properties[3];
             String location = properties[4];
             String memoryText = properties[5];
+            String tags = properties[6];
+
             ArrayList<String> images =  new ArrayList<String>();
-            if(properties.length > 6){
-                images.add(properties[6]);
-            }if(properties.length > 7){
+            if(properties.length > 7){
                 images.add(properties[7]);
-            } if(properties.length > 8){
+            }if(properties.length > 8){
                 images.add(properties[8]);
             } if(properties.length > 9){
                 images.add(properties[9]);
@@ -194,14 +197,16 @@ public class AddJournal extends Activity implements LocationListener {
                 images.add(properties[11]);
             } if(properties.length > 12){
                 images.add(properties[12]);
+            } if(properties.length > 13){
+                images.add(properties[13]);
             }
 
-            return new Journal(journalId,title,subTitle, date, location, memoryText, images);
+            return new Journal(journalId,title,subTitle, date, location, memoryText, tags, images);
 
         } catch (Exception e) {
             e.printStackTrace();
             return new Journal(null,null,null,null,null,null,
-                    null);
+                    null,null);
         }
 
     }
@@ -519,6 +524,7 @@ public class AddJournal extends Activity implements LocationListener {
                     TextView date = (TextView) findViewById(R.id.date);
                     TextView location = (TextView) findViewById(R.id.locationView);
                     TextView memoryText = (TextView) findViewById(R.id.memoryTextArea);
+                    TextView tags = (TextView) findViewById(R.id.tags);
 
                     if(isEdit){
                         //dosyayı silip yeni dosya yaratma planlanmıştır.
@@ -535,6 +541,7 @@ public class AddJournal extends Activity implements LocationListener {
                     outputWriter.write(date.getText().toString()+"#");
                     outputWriter.write(location.getText().toString()+"#");
                     outputWriter.write(memoryText.getText().toString()+"#");
+                    outputWriter.write(tags.getText().toString()+"#");
 
                     if(imageUris.size()>0)
                         outputWriter.write(imageUris.get(0).toString()+"#");

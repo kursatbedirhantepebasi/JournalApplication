@@ -30,10 +30,28 @@
         android:layout_marginLeft="70dp" />
 
     <ImageView
-        android:id="@+id/timeIcon"
+        android:id="@+id/tagIcon"
         android:layout_width="wrap_content"
         android:layout_height="14dp"
         android:layout_below="@+id/subTitle"
+        android:layout_marginLeft="65dp"
+        android:clickable="true"
+        android:src="@drawable/ic_label_outline_black_24dp" />
+
+    <TextView
+        android:id="@+id/tags"
+        android:layout_width="213dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/subTitle"
+        android:layout_marginLeft="85dp"
+        android:layout_marginTop="-1dp"
+        android:textSize="11dp" />
+
+    <ImageView
+        android:id="@+id/timeIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:layout_below="@+id/tags"
         android:layout_marginLeft="65dp"
         android:clickable="true"
         android:src="@drawable/ic_date_range_black_24dp" />
@@ -42,7 +60,7 @@
         android:id="@+id/date"
         android:layout_width="213dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/subTitle"
+        android:layout_below="@id/tags"
         android:layout_marginLeft="85dp"
         android:layout_marginTop="-1dp"
         android:textSize="11dp" />

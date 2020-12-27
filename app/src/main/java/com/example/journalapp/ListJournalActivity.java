@@ -90,12 +90,12 @@ public class ListJournalActivity  extends AppCompatActivity {
             String date = new String(properties[3].getBytes("ISO-8859-9"));
             String location = new String(properties[4].getBytes("ISO-8859-9"));
             String memoryText = new String(properties[5].getBytes("ISO-8859-9"));
+            String tags = new String(properties[6].getBytes("ISO-8859-9"));
+
             ArrayList<String> images =  new ArrayList<String>();
-            if(properties.length > 6){
-                images.add(properties[6]);
-            }if(properties.length > 7){
+            if(properties.length > 7){
                 images.add(properties[7]);
-            } if(properties.length > 8){
+            }if(properties.length > 8){
                 images.add(properties[8]);
             } if(properties.length > 9){
                 images.add(properties[9]);
@@ -105,14 +105,16 @@ public class ListJournalActivity  extends AppCompatActivity {
                 images.add(properties[11]);
             } if(properties.length > 12){
                 images.add(properties[12]);
+            } if(properties.length > 13){
+                images.add(properties[13]);
             }
 
-            return new Journal(journalId,title,subTitle, date, location, memoryText, images);
-
+            return new Journal(journalId,title,subTitle, date, location, memoryText, tags, images);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new Journal(null,null,null,null,null,null,null);
+            return new Journal(null,null,null,null,null,null,
+                    null,null);
         }
 
     }
@@ -143,6 +145,10 @@ public class ListJournalActivity  extends AppCompatActivity {
             case R.id.forYear:
                 Intent journalListForYearActivity = new Intent(ListJournalActivity.this, JournalListForYearActivity.class);
                 startActivity(journalListForYearActivity);
+                return true;
+            case R.id.statisticForTags:
+                Intent journalStatisticForTagsActivity = new Intent(ListJournalActivity.this, JournalStatisticForTagsActivity.class);
+                startActivity(journalStatisticForTagsActivity);
                 return true;
             default:
                 return super.onContextItemSelected(item);

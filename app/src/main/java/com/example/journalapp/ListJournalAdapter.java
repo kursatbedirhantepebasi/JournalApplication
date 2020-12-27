@@ -45,7 +45,8 @@ public class ListJournalAdapter extends RecyclerView.Adapter<ListJournalAdapter.
             }
             else {
                 for (Journal journal:journalrListAll){
-                    if(journal.title.toLowerCase().contains(constraint.toString().toLowerCase())){
+                    if(journal.title.toLowerCase().contains(constraint.toString().toLowerCase())
+                            || journal.tags.toLowerCase().contains(constraint.toString().toLowerCase())){
                         filteredList.add(journal);
                     }
                 }
@@ -67,7 +68,7 @@ public class ListJournalAdapter extends RecyclerView.Adapter<ListJournalAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView title, subTitle, date, location;
+        public TextView title, subTitle, date, location, tags;
         public ImageView mainImg;
 
 
@@ -76,6 +77,7 @@ public class ListJournalAdapter extends RecyclerView.Adapter<ListJournalAdapter.
 
             title = (TextView) view.findViewById(R.id.title);
             subTitle = (TextView) view.findViewById(R.id.subTitle);
+            tags = (TextView) view.findViewById(R.id.tags);
             date = (TextView) view.findViewById(R.id.date);
             location = (TextView) view.findViewById(R.id.location);
             mainImg = (ImageView) view.findViewById(R.id.mainImg);
@@ -115,6 +117,7 @@ public class ListJournalAdapter extends RecyclerView.Adapter<ListJournalAdapter.
 
         holder.title.setText(journalrList.get(position).title);
         holder.subTitle.setText(journalrList.get(position).subTitle);
+        holder.tags.setText(journalrList.get(position).tags);
         holder.date.setText(journalrList.get(position).date);
         holder.location.setText(journalrList.get(position).location);
        // holder.mainImg.setImageBitmap(Uri.parse(journalrList.get(position).images.get(0)));
