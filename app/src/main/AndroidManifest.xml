@@ -15,6 +15,8 @@
         <activity android:name=".AddJournal" android:theme="@style/AppTheme.PopUp"></activity>
         <activity android:name=".ListJournalActivity">
         </activity>
+        <activity android:name=".JournalStatisticActivity">
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

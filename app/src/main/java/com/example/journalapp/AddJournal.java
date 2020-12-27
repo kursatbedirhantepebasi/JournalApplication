@@ -80,6 +80,7 @@ public class AddJournal extends Activity implements LocationListener {
         clickImage();
         saveJournal();
         isEditControlAndBuildForm();
+        deleteJournal();
     }
 
     public void isEditControlAndBuildForm(){
@@ -567,7 +568,30 @@ public class AddJournal extends Activity implements LocationListener {
             }
         });
 
+    }
 
+    public void deleteJournal(){
+        deleteButton  = findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //data silinmeli
+                        File dir = getFilesDir();
+                        File file = new File(dir, journalId+".txt");
+                        file.delete();
+
+                        //liste yenilenmesi için main activitiy adımlarındaki kontroller yapılmalı
+                        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(mainActivity);
+
+                        Toast toast =  Toast.makeText(AddJournal.this,"Successfully Deleted",
+                                Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+                        toast.show();
+
+                    }
+                });
     }
 
 }

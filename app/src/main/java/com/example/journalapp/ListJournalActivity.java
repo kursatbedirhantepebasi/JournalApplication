@@ -110,6 +110,14 @@ public class ListJournalActivity  extends AppCompatActivity {
                 Intent addJournalActivity = new Intent(ListJournalActivity.this, AddJournal.class);
                 startActivity(addJournalActivity);
                 return true;
+            case R.id.statistic:
+                Intent journalStatisticActivity = new Intent(ListJournalActivity.this, JournalStatisticActivity.class);
+                startActivity(journalStatisticActivity);
+                return true;
+            case R.id.forAll:
+                Intent listJournalActivity = new Intent(ListJournalActivity.this, ListJournalActivity.class);
+                startActivity(listJournalActivity);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
