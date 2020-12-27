@@ -81,6 +81,7 @@ public class AddJournal extends Activity implements LocationListener {
         saveJournal();
         isEditControlAndBuildForm();
         deleteJournal();
+        sharedButtonListenner();
     }
 
     public void isEditControlAndBuildForm(){
@@ -592,6 +593,42 @@ public class AddJournal extends Activity implements LocationListener {
 
                     }
                 });
+    }
+
+    public void sharedButtonListenner(){
+
+        sharedButton = findViewById(R.id.sharedButton);
+        sharedButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+
+                        EditText title = (EditText) findViewById(R.id.title);
+                        EditText subTitle = (EditText) findViewById(R.id.subTitle);
+                        TextView date = (TextView) findViewById(R.id.date);
+                        TextView location = (TextView) findViewById(R.id.locationView);
+                        TextView memoryText = (TextView) findViewById(R.id.memoryTextArea);
+
+                        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                                "Journal Title :"+" "+title.getText().toString()+"\n"+
+                                        "Journal Sub Title :"+subTitle.getText().toString()+"\n"+
+                                        "Date : "+date.getText().toString()+"\n"+
+                                        "Location : "+location.getText().toString()+"\n"+
+                                        "Memory Text : "+memoryText.getText().toString()+"\n"
+
+                        );
+
+
+                        sendIntent.setType("text/plain");
+
+                        Intent shareIntent = Intent.createChooser(sendIntent, null);
+                        startActivity(shareIntent);
+                    }
+                });
+
     }
 
 }
