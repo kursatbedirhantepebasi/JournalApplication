@@ -139,6 +139,18 @@ public class JournalStatisticActivity extends AppCompatActivity {
                 Intent listJournalActivity = new Intent(JournalStatisticActivity.this, ListJournalActivity.class);
                 startActivity(listJournalActivity);
                 return true;
+            case R.id.forDay:
+                Intent journalListForDayActivity = new Intent(JournalStatisticActivity.this, JournalListForDayActivity.class);
+                startActivity(journalListForDayActivity);
+                return true;
+            case R.id.forMonth:
+                Intent journalListForMonthActivity = new Intent(JournalStatisticActivity.this, JournalListForMonthActivity.class);
+                startActivity(journalListForMonthActivity);
+                return true;
+            case R.id.forYear:
+                Intent journalListForYearActivity = new Intent(JournalStatisticActivity.this, JournalListForYearActivity.class);
+                startActivity(journalListForYearActivity);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }

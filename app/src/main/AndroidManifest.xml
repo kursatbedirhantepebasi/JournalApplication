@@ -15,6 +15,12 @@
         <activity android:name=".AddJournal" android:theme="@style/AppTheme.PopUp"></activity>
         <activity android:name=".ListJournalActivity">
         </activity>
+        <activity android:name=".JournalListForDayActivity">
+        </activity>
+        <activity android:name=".JournalListForMonthActivity">
+        </activity>
+        <activity android:name=".JournalListForYearActivity">
+        </activity>
         <activity android:name=".JournalStatisticActivity">
         </activity>
         <activity android:name=".MainActivity">

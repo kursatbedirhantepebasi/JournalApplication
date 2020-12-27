@@ -1,15 +1,15 @@
 package com.example.journalapp;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,15 +19,51 @@ import com.example.journalapp.models.Journal;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
-public class ListJournalAdapter extends RecyclerView.Adapter<ListJournalAdapter.MyViewHolder> {
+public class ListJournalAdapter extends RecyclerView.Adapter<ListJournalAdapter.MyViewHolder> implements Filterable {
 
     private ArrayList<Journal> journalrList;
     private ArrayList<Journal> journalrListAll;
     Context context;
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<Journal> filteredList = new ArrayList<>();
+
+            if(constraint.toString().isEmpty()){
+                filteredList.addAll(journalrListAll);
+            }
+            else {
+                for (Journal journal:journalrListAll){
+                    if(journal.title.toLowerCase().contains(constraint.toString().toLowerCase())){
+                        filteredList.add(journal);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            journalrList.clear();
+            journalrList.addAll((Collection<? extends Journal>) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 

@@ -2,11 +2,11 @@ package com.example.journalapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import androidx.appcompat.widget.SearchView;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,19 +15,19 @@ import com.example.journalapp.models.Journal;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class ListJournalActivity  extends AppCompatActivity {
-
+public class JournalListForYearActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListJournalAdapter listJournalAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         ArrayList<Journal> journals = getStorageFilesAndCreateList();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_journal);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
 
         listJournalAdapter = new ListJournalAdapter(journals);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -35,30 +35,7 @@ public class ListJournalActivity  extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(listJournalAdapter);
         listJournalAdapter.notifyDataSetChanged();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.app_menu,menu);
-        MenuItem item = menu.findItem(R.id.forSearchItem);
-        androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) item.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                listJournalAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-
-        return true;
     }
 
     public ArrayList<Journal> getStorageFilesAndCreateList(){
@@ -66,10 +43,20 @@ public class ListJournalActivity  extends AppCompatActivity {
         String[] fileList = this.fileList();
         ArrayList<Journal> journals = new ArrayList<Journal>();
 
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
         for (String fileName:fileList) {
-            journals.add(createJournal(fileName));
+            Journal tempJournal =  createJournal(fileName);
+            String[] values = tempJournal.date.split("/");
+            if(values[2].equals(Integer.toString(currentYear))){
+
+                journals.add(tempJournal);
+
+            }
         }
+
         return journals;
+
     }
 
     public Journal createJournal(String fileName){
@@ -118,30 +105,53 @@ public class ListJournalActivity  extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.app_menu,menu);
+        MenuItem item = menu.findItem(R.id.forSearchItem);
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                listJournalAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addJournal:
-                Intent addJournalActivity = new Intent(ListJournalActivity.this, AddJournal.class);
+                Intent addJournalActivity = new Intent(JournalListForYearActivity.this, AddJournal.class);
                 startActivity(addJournalActivity);
                 return true;
             case R.id.statistic:
-                Intent journalStatisticActivity = new Intent(ListJournalActivity.this, JournalStatisticActivity.class);
+                Intent journalStatisticActivity = new Intent(JournalListForYearActivity.this, JournalStatisticActivity.class);
                 startActivity(journalStatisticActivity);
                 return true;
             case R.id.forAll:
-                Intent listJournalActivity = new Intent(ListJournalActivity.this, ListJournalActivity.class);
+                Intent listJournalActivity = new Intent(JournalListForYearActivity.this, ListJournalActivity.class);
                 startActivity(listJournalActivity);
                 return true;
             case R.id.forDay:
-                Intent journalListForDayActivity = new Intent(ListJournalActivity.this, JournalListForDayActivity.class);
+                Intent journalListForDayActivity = new Intent(JournalListForYearActivity.this, JournalListForDayActivity.class);
                 startActivity(journalListForDayActivity);
                 return true;
             case R.id.forMonth:
-                Intent journalListForMonthActivity = new Intent(ListJournalActivity.this, JournalListForMonthActivity.class);
+                Intent journalListForMonthActivity = new Intent(JournalListForYearActivity.this, JournalListForMonthActivity.class);
                 startActivity(journalListForMonthActivity);
                 return true;
             case R.id.forYear:
-                Intent journalListForYearActivity = new Intent(ListJournalActivity.this, JournalListForYearActivity.class);
+                Intent journalListForYearActivity = new Intent(JournalListForYearActivity.this, JournalListForYearActivity.class);
                 startActivity(journalListForYearActivity);
                 return true;
             default:
