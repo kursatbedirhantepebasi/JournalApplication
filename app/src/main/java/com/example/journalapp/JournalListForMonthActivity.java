@@ -2,6 +2,7 @@ package com.example.journalapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -49,8 +50,8 @@ public class JournalListForMonthActivity extends AppCompatActivity {
         for (String fileName:fileList) {
             Journal tempJournal =  createJournal(fileName);
             String[] values = tempJournal.date.split("/");
-            if(values[1].equals(Integer.toString(currentMonth)) && values[2].equals(Integer.toString(currentYear))){
 
+            if(Integer.parseInt(values[1])==currentMonth && Integer.parseInt(values[2])==currentYear){
                 journals.add(tempJournal);
 
             }

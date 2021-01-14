@@ -11,6 +11,8 @@ import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.chart.common.listener.Event;
+import com.anychart.chart.common.listener.ListenersInterface;
 import com.anychart.charts.Pie;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -119,6 +121,16 @@ public class JournalStatisticForTagsActivity extends AppCompatActivity {
 
       pie.data(dataEntryList);
       anyChartView.setChart(pie);
+
+        pie.setOnClickListener(new ListenersInterface.OnClickListener(new String[]{"x", "value"}) {
+            @Override
+            public void onClick(Event event) {
+                String tag = event.getData().get("x");
+                Intent intent = new Intent(JournalStatisticForTagsActivity.this, ListJournalActivity.class);
+                intent.putExtra("tag", tag);
+                JournalStatisticForTagsActivity.this.startActivity(intent);
+            }
+        });
 
     }
 

@@ -51,7 +51,8 @@ public class JournalListForDayActivity extends AppCompatActivity {
         for (String fileName:fileList) {
             Journal tempJournal =  createJournal(fileName);
             String[] values = tempJournal.date.split("/");
-            if(values[0].equals(Integer.toString(currentDay)) && values[1].equals(Integer.toString(currentMonth)) && values[2].equals(Integer.toString(currentYear))){
+
+            if(Integer.parseInt(values[0])==currentDay && Integer.parseInt(values[1])==currentMonth && Integer.parseInt(values[2])==currentYear){
 
                 journals.add(tempJournal);
 

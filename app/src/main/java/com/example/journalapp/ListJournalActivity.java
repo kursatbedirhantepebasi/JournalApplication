@@ -44,6 +44,13 @@ public class ListJournalActivity  extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.forSearchItem);
         androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) item.getActionView();
 
+        String tag = getIntent().getStringExtra("tag");
+        Log.i("tag","tag === "+tag);
+
+        if(tag != null){
+            listJournalAdapter.getFilter().filter(tag);
+        }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

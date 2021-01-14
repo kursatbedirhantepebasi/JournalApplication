@@ -25,7 +25,7 @@
 
             <item
                 android:id="@+id/statistic"
-                android:title="Statistic For Date"
+                android:title="Statistic For By Months"
                 android:icon="@drawable/ic_pie_chart_black_24dp"
                 app:showAsAction="never"/>
 
