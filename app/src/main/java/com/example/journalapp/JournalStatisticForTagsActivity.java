@@ -173,6 +173,10 @@ public class JournalStatisticForTagsActivity extends AppCompatActivity {
                 Intent journalStatisticForTagsActivity = new Intent(JournalStatisticForTagsActivity.this, JournalStatisticForTagsActivity.class);
                 startActivity(journalStatisticForTagsActivity);
                 return true;
+            case R.id.forSelectedDate:
+                Intent journalListForSelectedDate = new Intent(JournalStatisticForTagsActivity.this, JournalListForSelectedDate.class);
+                startActivity(journalListForSelectedDate);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }

@@ -14,7 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.journalapp.models.Journal;
 
 import java.io.FileInputStream;
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ListJournalActivity  extends AppCompatActivity {
 
@@ -73,8 +78,40 @@ public class ListJournalActivity  extends AppCompatActivity {
         String[] fileList = this.fileList();
         ArrayList<Journal> journals = new ArrayList<Journal>();
 
+        String startDate = getIntent().getStringExtra("startDate");
+        String endDate = getIntent().getStringExtra("endDate");
+
+        DateFormat f = new SimpleDateFormat("dd/mm/yyyy");
+
+
         for (String fileName:fileList) {
-            journals.add(createJournal(fileName));
+
+            Journal journal = createJournal(fileName);
+
+            if(startDate != null && endDate != null){
+
+                Date d1startDate = f.parse(startDate, new ParsePosition(0));
+                Date d2endDate = f.parse(endDate, new ParsePosition(0));
+                Date d3journalDate = f.parse(journal.date, new ParsePosition(0));
+                Log.i("test","startDate = "+ startDate);
+                Log.i("test","endDate = "+ endDate);
+                Log.i("test","journal.date = "+ journal.date);
+
+                Log.i("test","d1startDate.compareTo(d1startDate) = "+ d1startDate.compareTo(d1startDate));
+                Log.i("test","d2endDate.compareTo(d3journalDate) = "+ d2endDate.compareTo(d3journalDate));
+
+
+                if(d1startDate.compareTo(d3journalDate)<0 && d2endDate.compareTo(d3journalDate)>0){
+
+                    journals.add(journal);
+
+                }
+
+            }
+
+            else
+                journals.add(journal);
+
         }
         return journals;
     }
@@ -156,6 +193,10 @@ public class ListJournalActivity  extends AppCompatActivity {
             case R.id.statisticForTags:
                 Intent journalStatisticForTagsActivity = new Intent(ListJournalActivity.this, JournalStatisticForTagsActivity.class);
                 startActivity(journalStatisticForTagsActivity);
+                return true;
+            case R.id.forSelectedDate:
+                Intent journalListForSelectedDate = new Intent(ListJournalActivity.this, JournalListForSelectedDate.class);
+                startActivity(journalListForSelectedDate);
                 return true;
             default:
                 return super.onContextItemSelected(item);

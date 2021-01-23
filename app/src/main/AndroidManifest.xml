@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".JournalListForYearActivity">
         </activity>
+        <activity android:name=".JournalListForSelectedDate">
+        </activity>
         <activity android:name=".JournalStatisticActivity">
         </activity>
         <activity android:name=".JournalStatisticForTagsActivity">

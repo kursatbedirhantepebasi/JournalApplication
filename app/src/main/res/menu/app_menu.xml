@@ -59,6 +59,12 @@
                 android:icon="@drawable/ic_format_list_bulleted_black_24dp"
                 app:showAsAction="never"/>
 
+            <item
+                android:id="@+id/forSelectedDate"
+                android:title="List For Selected Date"
+                android:icon="@drawable/ic_format_list_bulleted_black_24dp"
+                app:showAsAction="never"/>
+
         </menu>
     </item>
 
